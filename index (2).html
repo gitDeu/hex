@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hex Color Extractor</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.16/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 min-h-screen flex items-center justify-center">
+  <div class="max-w-md bg-white p-8 rounded shadow-md">
+    <h1 class="text-2xl font-semibold mb-4">Hex Color Extractor</h1>
+    <textarea id="codeInput" class="w-full h-32 px-2 py-1 border rounded" placeholder="Paste your code here..."></textarea>
+    <button id="extractButton" class="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">Extract Hex Colors</button>
+    <ul id="colorOutput" class="mt-4 list-disc pl-6"></ul>
+  </div>
+
+  <script>
+    document.getElementById('extractButton').addEventListener('click', function () {
+      const codeInput = document.getElementById('codeInput').value;
+      const colorCodePairs = extractColorCodePairs(codeInput);
+      displayColorCodePairs(colorCodePairs);
+    });
+
+    function extractColorCodePairs(code) {
+      const hexRegex = /#[0-9A-Fa-f]{6}\b/g;
+      const hexColors = code.match(hexRegex) || [];
+
+      return hexColors.map(hexColor => {
+        return { color: hexColor, code: hexColor };
+      });
+    }
+
+    function displayColorCodePairs(colorCodePairs) {
+      const colorOutput = document.getElementById('colorOutput');
+      colorOutput.innerHTML = '';
+
+      if (colorCodePairs.length > 0) {
+        colorCodePairs.forEach(pair => {
+          const listItem = document.createElement('li');
+          listItem.className = 'mb-2';
+          
+          const colorBox = document.createElement('div');
+          colorBox.className = 'w-12 h-12 inline-block mr-2';
+          colorBox.style.backgroundColor = pair.color;
+          
+          const colorText = document.createElement('span');
+          colorText.textContent = pair.code;
+          
+          listItem.appendChild(colorBox);
+          listItem.appendChild(colorText);
+          
+          colorOutput.appendChild(listItem);
+        });
+      } else {
+        colorOutput.textContent = 'No hex colors found.';
+      }
+    }
+  </script>
+</body>
+</html>
